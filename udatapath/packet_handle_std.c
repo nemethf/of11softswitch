@@ -1,4 +1,5 @@
 /* Copyright (c) 2011, TrafficLab, Ericsson Research, Hungary
+ * Copyright (c) 2012, Budapest University of Technology and Economics
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,6 +28,7 @@
  *
  *
  * Author: Zoltán Lajos Kis <zoltan.lajos.kis@ericsson.com>
+ * Author: Felicián Németh <nemethf@tmit.bme.hu>
  */
 
 #include <stdlib.h>
