@@ -902,7 +902,7 @@ netdev_recv(struct netdev *netdev, struct ofpbuf *buffer)
     if (n_bytes < 0) {
         if (errno != EAGAIN) {
             VLOG_WARN_RL(LOG_MODULE, &rl, "error receiving Ethernet packet on %s: %s",
-                         strerror(errno), netdev->name);
+                         netdev->name, strerror(errno));
         }
         return errno;
     } else {
