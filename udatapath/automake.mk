@@ -20,6 +20,8 @@ udatapath_ofdatapath_SOURCES = \
 	udatapath/dp_control.h \
 	udatapath/dp_exp.c \
 	udatapath/dp_exp.h \
+	udatapath/dp_exp_bme.c \
+	udatapath/dp_exp_bme.h \
 	udatapath/dp_ports.c \
 	udatapath/dp_ports.h \
 	udatapath/flow_table.c \
@@ -77,6 +79,8 @@ udatapath_libudatapath_a_SOURCES = \
 	udatapath/dp_control.h \
 	udatapath/dp_exp.c \
 	udatapath/dp_exp.h \
+	udatapath/dp_exp_bme.c \
+	udatapath/dp_exp_bme.h \
 	udatapath/flow_table.c \
 	udatapath/flow_table.h \
 	udatapath/flow_entry.c \

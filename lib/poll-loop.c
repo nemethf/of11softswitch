@@ -1,5 +1,6 @@
 /* Copyright (c) 2008, 2009 The Board of Trustees of The Leland Stanford
  * Junior University
+ * Copyright (c) 2012, Budapest University of Technology and Economics
  * 
  * We are making the OpenFlow specification and associated documentation
  * (Software) available for public use and benefit with the expectation
@@ -111,6 +112,15 @@ poll_timer_wait(int msec)
         if (VLOG_IS_DBG_ENABLED(LOG_MODULE)) {
             backtrace_capture(&timeout_backtrace);
         }
+    }
+}
+
+/* Decreases timeout to 'msec' if 'msec' is positive */
+void
+poll_timer_wait_decrease(int msec)
+{
+    if (msec > 0 && msec < timeout) {
+	poll_timer_wait(msec);
     }
 }
 

@@ -1,4 +1,5 @@
 /* Copyright (c) 2011, TrafficLab, Ericsson Research, Hungary
+ * Copyright (c) 2012, Budapest University of Technology and Economics
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,6 +28,7 @@
  *
  *
  * Author: Zoltán Lajos Kis <zoltan.lajos.kis@ericsson.com>
+ * Author: Felicián Németh <nemethf@tmit.bme.hu>
  */
 
 #include <stdlib.h>
@@ -43,15 +45,27 @@
 #include "openflow/openflow.h"
 #include "openflow/openflow-ext.h"
 #include "openflow/nicira-ext.h"
+#include "openflow/bme-ext.h"
 #include "vlog.h"
+#include "dp_exp_bme.h"
 
 #define LOG_MODULE VLM_dp_exp
 
 static struct vlog_rate_limit rl = VLOG_RATE_LIMIT_INIT(60, 60);
 
 void
-dp_exp_action(struct packet * pkt UNUSED, struct ofl_action_experimenter *act) {
-	VLOG_WARN_RL(LOG_MODULE, &rl, "Trying to execute unknown experimenter action (%u).", act->experimenter_id);
+dp_exp_action(struct packet * pkt, struct ofl_action_experimenter *act) {
+    switch (act->experimenter_id) {
+    case BME_EXPERIMENTER_ID: {
+	dp_exp_bme_action( pkt, act );
+	break;
+    }
+    default: {
+	VLOG_WARN_RL(LOG_MODULE, &rl,
+		     "Trying to execute unknown experimenter action (%u).",
+		     act->experimenter_id);
+    }
+    }
 }
 
 void

@@ -68,6 +68,20 @@ enum vconn_state {
     VCS_DISCONNECTED            /* Connection failed or connection closed. */
 };
 
+static struct ofl_exp_act dp_exp_act_callbacks =
+	{.pack      = ofl_exp_act_pack,
+	 .unpack    = ofl_exp_act_unpack,
+	 .free      = ofl_exp_act_free,
+	 .ofp_len   = ofl_exp_act_ofp_len,
+	 .to_string = ofl_exp_act_to_string};
+
+static struct ofl_exp_inst dp_exp_inst_callbacks =
+	{.pack      = ofl_exp_inst_pack,
+	 .unpack    = ofl_exp_inst_unpack,
+	 .free      = ofl_exp_inst_free,
+	 .ofp_len   = ofl_exp_inst_ofp_len,
+	 .to_string = ofl_exp_inst_to_string};
+
 static struct ofl_exp_msg ofl_exp_msg =
         {.pack      = ofl_exp_msg_pack,
          .unpack    = ofl_exp_msg_unpack,
@@ -75,8 +89,8 @@ static struct ofl_exp_msg ofl_exp_msg =
          .to_string = ofl_exp_msg_to_string};
 
 static struct ofl_exp ofl_exp =
-        {.act   = NULL,
-         .inst  = NULL,
+        {.act   = &dp_exp_act_callbacks,
+         .inst  = &dp_exp_inst_callbacks,
          .match = NULL,
          .stats = NULL,
          .msg   = &ofl_exp_msg};

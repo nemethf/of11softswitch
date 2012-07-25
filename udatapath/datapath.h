@@ -35,6 +35,7 @@
  * the OpenFlow 1.1 userspace switch.
  *
  * Author: Zoltán Lajos Kis <zoltan.lajos.kis@ericsson.com>
+ * Author: Felicián Németh <nemethf@tmit.bme.hu>
  */
 
 #ifndef DATAPATH_H
@@ -54,6 +55,7 @@
 #include "group_table.h"
 #include "timeval.h"
 #include "list.h"
+#include "packet.h"
 
 
 struct rconn;
@@ -63,7 +65,6 @@ struct sender;
 /****************************************************************************
  * The datapath
  ****************************************************************************/
-
 
 struct datapath {
     /* Strings to describe the manufacturer, hardware, and software. This data
@@ -111,6 +112,8 @@ struct datapath {
     of_hw_driver_t *hw_drv;
     struct hw_pkt_q_entry *hw_pkt_list_head, *hw_pkt_list_tail;
 #endif
+
+    void *exp_bme;
 };
 
 /* Creates a new datapath */

@@ -296,7 +296,7 @@ packet_handle_std_create(struct packet *pkt) {
     return handle;
 }
 struct packet_handle_std *
-packet_handle_std_clone(struct packet *pkt, struct packet_handle_std *handle UNUSED) {
+packet_handle_std_clone(struct packet *pkt, struct packet_handle_std *handle) {
     struct packet_handle_std *clone = xmalloc(sizeof(struct packet_handle_std));
 
     clone->pkt = pkt;
@@ -307,6 +307,7 @@ packet_handle_std_clone(struct packet *pkt, struct packet_handle_std *handle UNU
     // TODO Zoltan: if handle->valid, then match could be memcpy'd, and protocol
     //              could be offset
     packet_handle_std_validate(clone);
+    clone->match->metadata = handle->match->metadata;
 
     return clone;
 }

@@ -1,5 +1,6 @@
 /* Copyright (c) 2008, 2009 The Board of Trustees of The Leland Stanford
  * Junior University
+ * Copyright (c) 2012, Budapest University of Technology and Economics
  *
  * We are making the OpenFlow specification and associated documentation
  * (Software) available for public use and benefit with the expectation
@@ -36,6 +37,7 @@
  * the OpenFlow 1.1 userspace switch.
  *
  * Author: Zoltán Lajos Kis <zoltan.lajos.kis@ericsson.com>
+ * Author: Felicián Németh <nemethf@tmit.bme.hu>
  */
 
 #include "datapath.h"
@@ -113,6 +115,20 @@ struct remote {
 };
 
 
+static struct ofl_exp_act dp_exp_act_callbacks =
+	{.pack      = ofl_exp_act_pack,
+	 .unpack    = ofl_exp_act_unpack,
+	 .free      = ofl_exp_act_free,
+	 .ofp_len   = ofl_exp_act_ofp_len,
+	 .to_string = ofl_exp_act_to_string};
+
+static struct ofl_exp_inst dp_exp_inst_callbacks =
+	{.pack      = ofl_exp_inst_pack,
+	 .unpack    = ofl_exp_inst_unpack,
+	 .free      = ofl_exp_inst_free,
+	 .ofp_len   = ofl_exp_inst_ofp_len,
+	 .to_string = ofl_exp_inst_to_string};
+
 /* Callbacks for processing experimenter messages in OFLib. */
 static struct ofl_exp_msg dp_exp_msg =
         {.pack      = ofl_exp_msg_pack,
@@ -121,8 +137,8 @@ static struct ofl_exp_msg dp_exp_msg =
          .to_string = ofl_exp_msg_to_string};
 
 static struct ofl_exp dp_exp =
-        {.act   = NULL,
-         .inst  = NULL,
+        {.act   = &dp_exp_act_callbacks,
+         .inst  = &dp_exp_inst_callbacks,
          .match = NULL,
          .stats = NULL,
          .msg   = &dp_exp_msg};
@@ -188,6 +204,8 @@ dp_new(void) {
     #if defined(OF_HW_PLAT) && (defined(UDATAPATH_AS_LIB) || defined(USE_NETDEV))
         dp_hw_drv_init(dp);
     #endif
+
+    dp->exp_bme = NULL;
 
     return dp;
 }

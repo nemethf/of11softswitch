@@ -1,4 +1,5 @@
 /* Copyright (c) 2011, TrafficLab, Ericsson Research, Hungary
+ * Copyright (c) 2012, Budapest University of Technology and Economics
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,6 +28,7 @@
  *
  *
  * Author: Zoltán Lajos Kis <zoltan.lajos.kis@ericsson.com>
+ * Author: Felicián Németh <nemethf@tmit.bme.hu>
  */
 
 #include <config.h>
@@ -169,6 +171,19 @@ parse16(char *str, struct names16 *names, size_t names_num, uint16_t max, uint16
 static int
 parse32(char *str, struct names32 *names, size_t names_num, uint32_t max, uint32_t *val);
 
+static struct ofl_exp_act dpctl_exp_act =
+	{.pack      = ofl_exp_act_pack,
+	 .unpack    = ofl_exp_act_unpack,
+	 .free      = ofl_exp_act_free,
+	 .ofp_len   = ofl_exp_act_ofp_len,
+	 .to_string = ofl_exp_act_to_string};
+
+static struct ofl_exp_inst dpctl_exp_inst =
+	{.pack      = ofl_exp_inst_pack,
+	 .unpack    = ofl_exp_inst_unpack,
+	 .free      = ofl_exp_inst_free,
+	 .ofp_len   = ofl_exp_inst_ofp_len,
+	 .to_string = ofl_exp_inst_to_string};
 
 static struct ofl_exp_msg dpctl_exp_msg =
         {.pack      = ofl_exp_msg_pack,
@@ -177,8 +192,8 @@ static struct ofl_exp_msg dpctl_exp_msg =
          .to_string = ofl_exp_msg_to_string};
 
 static struct ofl_exp dpctl_exp =
-        {.act   = NULL,
-         .inst  = NULL,
+        {.act   = &dpctl_exp_act,
+         .inst  = &dpctl_exp_inst,
          .match = NULL,
          .stats = NULL,
          .msg   = &dpctl_exp_msg};

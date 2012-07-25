@@ -1,5 +1,6 @@
 /* Copyright (c) 2008 The Board of Trustees of The Leland Stanford
  * Junior University
+ * Copyright (c) 2012, Budapest University of Technology and Economics
  *
  * We are making the OpenFlow specification and associated documentation
  * (Software) available for public use and benefit with the expectation
@@ -35,6 +36,7 @@
  * the OpenFlow 1.1 userspace switch.
  *
  * Author: Zoltán Lajos Kis <zoltan.lajos.kis@ericsson.com>
+ * Author: Felicián Németh <nemethf@tmit.bme.hu>
  */
 
 #include <arpa/inet.h>
@@ -51,6 +53,8 @@
 #include "oflib-exp/ofl-exp-openflow.h"
 #include "oflib/ofl-log.h"
 #include "util.h"
+#include "poll-loop.h"
+#include "dp_exp_bme.h"
 
 #include "vlog.h"
 #define LOG_MODULE VLM_dp_ports
@@ -269,12 +273,16 @@ dp_ports_run(struct datapath *dp) {
             // process_buffer takes ownership of ofpbuf buffer
             process_buffer(dp, p, buffer);
             buffer = NULL;
+	    p->conf->state &= ~OFPPS_LINK_DOWN;
+        } else if (error == ENETDOWN || error == ENETUNREACH) {
+	    p->conf->state |= OFPPS_LINK_DOWN;
         } else if (error != EAGAIN) {
             VLOG_ERR_RL(LOG_MODULE, &rl, "error receiving data from %s: %s",
                         netdev_get_name(p->netdev), strerror(error));
         }
     }
 
+    poll_timer_wait_decrease( dp_exp_bme_process_pending(dp) );
 }
 
 /* Returns the speed value in kbps of the highest bit set in the bitfield. */

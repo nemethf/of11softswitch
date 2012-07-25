@@ -1,5 +1,6 @@
 /* Copyright (c) 2008 The Board of Trustees of The Leland Stanford
  * Junior University
+ * Copyright (c) 2012, Budapest University of Technology and Economics
  * 
  * We are making the OpenFlow specification and associated documentation
  * (Software) available for public use and benefit with the expectation
@@ -56,6 +57,7 @@ struct poll_waiter;
 /* Schedule events to wake up the following poll_block(). */
 struct poll_waiter *poll_fd_wait(int fd, short int events);
 void poll_timer_wait(int msec);
+void poll_timer_wait_decrease(int msec);
 void poll_immediate_wake(void);
 
 /* Wait until an event occurs. */
