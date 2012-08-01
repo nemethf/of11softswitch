@@ -752,7 +752,15 @@ serialize(struct packet *pkt0, struct ofl_bme_serialize *action)
 static void
 get_coordinates(uint64_t addr, int *x, int *y)
 {
-    static const uint64_t mask = 0x0000000000FFFFFFULL; /* m12 */
+    static const uint64_t mask = 0x0000000000FFFFFFULL; /* m24 */
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+    /* checking for big_endianness does not provide full portability.
+     * moreover, __builtin_bswap64 is gcc specific.
+     */
+    addr = __builtin_bswap64(addr);
+#endif
+
     *x = addr & mask;
     *y = (addr >> (3 * 8)) & mask;
 }
@@ -771,6 +779,8 @@ update_distance_in_metadata(struct packet *pkt,
 
     get_coordinates(addr_dst, &x1, &y1);
     get_coordinates(addr_act, &x2, &y2);
+    VLOG_DBG_RL(LOG_MODULE, &rl, "x1, y1 = %u, %u", x1, y1);
+    VLOG_DBG_RL(LOG_MODULE, &rl, "x2, y2 = %u, %u", x2, y2);
 
     dist_new = SQR(x1 - x2) + SQR(y1 - y2);
     dist_old = match->metadata >> 16;
